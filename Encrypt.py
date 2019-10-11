@@ -4,6 +4,7 @@ from PyQt5.QtGui import QIcon
 
 class App(QWidget):
 
+# Initiates the general space of the window
     def __init__(self):
         super().__init__()
         self.title = 'Encryptor/Decryptor'
