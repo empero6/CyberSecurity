@@ -30,38 +30,6 @@ class App(QWidget):
         button2.clicked.connect(self.open_FileDialog)
         button2.setGeometry(QRect(100, 80, 111, 30))
 
-
-    #
-    # def initUI(self):
-    #     self.setWindowTitle(self.title)
-    #     self.setGeometry(self.left, self.top, self.width, self.height)
-    #
-    #     dialog_Box = QVBoxLayout()
-    #     dialog_Box2 = QVBoxLayout()
-    #
-    #     self.btn = QPushButton('Encrypt')
-    #     self.btn.clicked.connect(self.open_FileDialog)
-    #     dialog_Box.addWidget(self.btn)
-    #
-    #     self.btn2 = QPushButton('Decrypt')
-    #     self.btn2.clicked.connect(self.test)
-    #     dialog_Box2.addWidget(self.btn2)
-    #
-    #     self.label = QLabel()
-    #     dialog_Box.addWidget(self.label)
-    #     self.setLayout(dialog_Box)
-    #     self.show()
-    #
-    #     self.label2 = QLabel()
-    #     dialog_Box2.addWidget(self.label2)
-    #     self.setLayout(dialog_Box2)
-    #     self.show()
-    #
-    # def test(self):
-    #     self.setWindowTitle(self.title)
-    #     self.setGeometry(self.left, self.top, self.width, self.height)
-    #     print('2')
-    #
     def open_FileDialog(self):
         title = 'Hello'
         left = 100
@@ -74,15 +42,21 @@ class App(QWidget):
         self.getImage()
 
     def getImage(self):
+        vbox = QVBoxLayout()
         file_Name = QFileDialog.getOpenFileName(self,
                                                 '',
                                                 '',
                                                 '')
-        imagePath = file_Name[0]
-        pixmap = QPixmap(imagePath)
-        label.setPixmap(QPixmap(pixmap))
-        resize(pixmap.width(), pixmap.height())
-
+        label = QLabel(self)
+        image_path = file_Name[0]
+        if image_path.lower().endswith(('jpg' or 'txt' or 'mp3')):
+            pixmap = QPixmap(image_path)
+            label.setPixmap(pixmap)
+            vbox.addWidget(label)
+            self.setLayout(vbox)
+            self.show()
+        else:
+            print('Not a supported format')
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
