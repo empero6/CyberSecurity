@@ -1,45 +1,40 @@
-from PyQt5.QtWidgets import QApplication, QLabel, QWidget, QFileDialog, QPushButton, QDialog, QVBoxLayout
-from PyQt5.QtCore import pyqtSlot, QRect
+from PyQt5.QtWidgets import QApplication, QLabel, QWidget, QFileDialog, QPushButton, QLineEdit, QVBoxLayout
+from PyQt5.QtCore import *
+from PyQt5.QtCore import QRect
 import sys
-import PyQt5.QtGui
 from PyQt5.QtGui import QPixmap
+
 
 class App(QWidget):
     def __init__(self):
         super().__init__()
-        title = 'Encryptor/Decryptor Dialogue'
-        left = 10
-        top = 10
-        width = 320
-        height = 200
+        self.title = 'Encryptor/Decryptor Dialogue'
+        self.left = 10
+        self.top = 10
+        self.width = 250
+        self.height = 400
 
-        self.setWindowTitle(title)
-        self.setGeometry(left, top, width, height)
-
-        # self.initUI()
         self.encrypt()
         self.decrypt()
         self.show()
 
     def decrypt(self):
+        self.setWindowTitle(self.title)
+        self.setGeometry(self.left, self.top, self.width, self.height)
         button = QPushButton('Decrypt', self)
-        button.setGeometry((QRect(100, 100, 111, 30)))
+        button.setGeometry((QRect(65, 50, 100, 25)))
 
     def encrypt(self):
         button2 = QPushButton('Encrypt', self)
         button2.clicked.connect(self.open_FileDialog)
-        button2.setGeometry(QRect(100, 80, 111, 30))
+        button2.setGeometry(QRect(65, 75, 100, 25))
 
     def open_FileDialog(self):
-        title = 'Hello'
-        left = 100
-        width = 320
-        top = 10
-        height = 200
-        self.setWindowTitle(title)
-        self.setGeometry(left, top, width, height)
+        self.setWindowTitle(self.title)
+        self.setGeometry(self.left, self.top, self.width, self.height)
 
         self.getImage()
+
 
     def getImage(self):
         vbox = QVBoxLayout()
@@ -49,14 +44,20 @@ class App(QWidget):
                                                 '')
         label = QLabel(self)
         image_path = file_Name[0]
-        if image_path.lower().endswith(('jpg' or 'txt' or 'mp3')):
+        if image_path.lower().endswith(('jpeg', 'jpg' or 'txt' or 'mp3')):
             pixmap = QPixmap(image_path)
-            label.setPixmap(pixmap)
+            pixmap2 = pixmap.scaledToHeight(128)
+            pixmap3 = pixmap.scaledToWidth(128)
+            label.setPixmap(pixmap2)
             vbox.addWidget(label)
+
             self.setLayout(vbox)
+
             self.show()
         else:
             print('Not a supported format')
+
+
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
