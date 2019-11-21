@@ -1,6 +1,6 @@
 from PyQt5.QtWidgets import QApplication, QLabel, QWidget, QFileDialog, QPushButton, QLineEdit, QVBoxLayout
 from PyQt5.QtCore import *
-from PyQt5.QtCore import QRect
+from PyQt5.QtCore import QRect, pyqtSlot
 import sys
 from PyQt5.QtGui import QPixmap
 
@@ -14,8 +14,10 @@ class App(QWidget):
         self.width = 250
         self.height = 400
 
+        # Methods
         self.encrypt()
         self.decrypt()
+        self.textBox()
         self.show()
 
     def decrypt(self):
@@ -28,6 +30,12 @@ class App(QWidget):
         button2 = QPushButton('Encrypt', self)
         button2.clicked.connect(self.open_FileDialog)
         button2.setGeometry(QRect(65, 75, 100, 25))
+
+    def textBox(self):
+        self.textbox = QLineEdit(self)
+        self.textbox.move(65, 275)
+        self.textbox.resize(100, 20)
+        self.show()
 
     def open_FileDialog(self):
         self.setWindowTitle(self.title)
@@ -56,8 +64,6 @@ class App(QWidget):
             self.show()
         else:
             print('Not a supported format')
-
-
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
