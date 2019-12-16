@@ -1,71 +1,81 @@
-from PyQt5.QtWidgets import QApplication, QLabel, QWidget, QFileDialog, QPushButton, QLineEdit, QVBoxLayout
-from PyQt5.QtCore import *
-from PyQt5.QtCore import QRect, pyqtSlot
 import sys
-from PyQt5.QtGui import QPixmap
+import Updated_encrypt
+import re
+from PyQt5.QtGui import QPixmap, QImage
+from PyQt5.QtWidgets import (
+    QApplication,
+    QDialog,
+    QFileDialog,
+    QHBoxLayout,
+    QLabel,
+    QPushButton,
+    QVBoxLayout,
+    QWidget,
+)
 
+class Dialog(QDialog):
+    def __init__(self, parent=None):
+        super().__init__(parent)
 
-class App(QWidget):
-    def __init__(self):
-        super().__init__()
-        self.title = 'Encryptor/Decryptor Dialogue'
-        self.left = 10
-        self.top = 10
-        self.width = 250
-        self.height = 400
+        self.load_image_btn = QPushButton("Browse Encrypted")
+        self.load_image_btn.clicked.connect(self.load_image)
 
-        # Methods
-        self.encrypt()
-        self.decrypt()
-        self.textBox()
-        self.show()
+        self.load_image2_btn = QPushButton("Browse UnEncrypted")
+        self.load_image2_btn.clicked.connect(self.load_image2)
 
-    def decrypt(self):
+        self.image_lbl = QLabel()
+        lay = QVBoxLayout(self)
+        
+        lay.addWidget(self.load_image_btn)
+        lay.addWidget(self.image_lbl)
+
+        lay.addWidget(self.load_image2_btn)
+        lay.addWidget(self.image_lbl)                                
+
+    def load_image(self):      
+        image_path, _ = QFileDialog.getOpenFileName(self, "OpenFile", "", "")
+        if image_path:
+            updatedImage = Updated_encrypt.decrypt(image_path, 123, 59, 46, 16,0.8110155663012353, 0.8627450980392157, 1.673760664340451 )
+            pixmap = QPixmap(updatedImage)
+            self.image_lbl.setPixmap(QPixmap(pixmap))
+            
+            
+    def load_image2(self):
+        image_path, _ = QFileDialog.getOpenFileName(self, "OpenFile", "", "")
+        if image_path:
+            updatedImage = Updated_encrypt.encrypt(image_path, 123)
+            QPixmap(updatedImage)
+            self.image_lbl.setPixmap(QPixmap(pixmap))
+            
+class Window(QWidget):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+
+        self.title = "Encrypt/Decrypt"
+        self.InitWindow()
+
+    def InitWindow(self):
         self.setWindowTitle(self.title)
-        self.setGeometry(self.left, self.top, self.width, self.height)
-        button = QPushButton('Decrypt', self)
-        button.setGeometry((QRect(65, 75, 100, 25)))
+        self.setGeometry(200, 500, 400, 300)
 
-    def encrypt(self):
-        button2 = QPushButton('Encrypt', self)
-        button2.clicked.connect(self.open_FileDialog)
-        button2.setGeometry(QRect(65, 50, 100, 25))
+        self.encrypt_btn = QPushButton("Encrypt")
+        self.encrypt_btn.clicked.connect(self.openSecondDialog)
 
-    def textBox(self):
-        self.textbox = QLineEdit(self)
-        self.textbox.move(65, 275)
-        self.textbox.resize(100, 20)
-        self.show()
+        self.decrypt_btn = QPushButton("Decrypt")
+        self.decrypt_btn.clicked.connect(self.openSecondDialog)
 
-    def open_FileDialog(self):
-        self.setWindowTitle(self.title)
-        self.setGeometry(self.left, self.top, self.width, self.height)
+        vbox = QVBoxLayout(self)
+        vbox.addWidget(self.encrypt_btn)
+        vbox.addWidget(self.decrypt_btn)
 
-        self.getImage()
+    def openSecondDialog(self):
+        dialog = Dialog(self)
+        dialog.show()
+        
 
 
-    def getImage(self):
-        vbox = QVBoxLayout()
-        file_Name = QFileDialog.getOpenFileName(self,
-                                                '',
-                                                '',
-                                                '')
-        label = QLabel(self)
-        image_path = file_Name[0]
-        if image_path.lower().endswith(('jpeg', 'jpg' or 'txt' or 'mp3')):
-            pixmap = QPixmap(image_path)
-            pixmap2 = pixmap.scaledToHeight(128)
-            pixmap3 = pixmap.scaledToWidth(128)
-            label.setPixmap(pixmap2)
-            vbox.addWidget(label)
-
-            self.setLayout(vbox)
-
-            self.show()
-        else:
-            print('Not a supported format')
-
-if __name__ == '__main__':
+if __name__ == "__main__":
     app = QApplication(sys.argv)
-    ex = App()
-    sys.exit(app.exec_())
+    window = Window()
+    window.show()
+    sys.exit(app.exec())
